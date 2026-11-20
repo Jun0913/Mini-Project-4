@@ -1,34 +1,68 @@
 import { useState } from 'react';
-
+import { API_URL } from '../api/books';
+import { useNavigate } from 'react-router-dom';
 
 export default function BookForm() {
-  // CoverGenerator 컴포넌트를 출력하더라도 
-  // 입력 폼의 값을 유지할 수 있게 state로 정의
   const [title, setTitle] = useState("");
   const [author, setAuthor] = useState("");
   const [content, setContent] = useState("");
-  const [coverImageUrl, setCoverImageUrl] = useState("");
+  
+  const navigate = useNavigate(); // 주소를 바꿔 주는 함수(hook)
+  const handleAddBooks = async () => {
+    
+    const now = Date.now();
 
+    // 등록 결과는 BookList 컴포넌트에서 확인
+    try {
+      const res = await fetch(API_URL, {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({
+          title: title,
+          author: author,
+          content: content,
+          coverImageUrl: "",
+          createdAt: now,
+          updatedAt: now
+        })
+      });
+
+      // 서버 측 거부/에러 발생시 로그에 에러 메시지 출력
+      if(!res.ok) throw new Error(`등록 실패: ${res.status}`);
+
+      // App.jsx의 라우트에 의해 
+      // Layout 태그 안에서 BookList가 출력
+      navigate('/'); 
+    } catch(err) {
+      console.error(err);
+    }
+  }
+  
   return (
-    <form>
-      <input type="text" placeholder='title' 
-        value={title}
-        onChange={(e) => setTitle(e.target.value)}
-      />
-      <input type="text" placeholder='author' 
-        value={author}
-        onChange={(e) => setAuthor(e.target.value)}
-      />
-      <input type="text" placeholder='content' 
-        value={content}
-        onChange={(e) => setContent(e.target.value)}
-      />
-
-      <button
-        type="button"
-      >
-        AI 표지 생성?
-      </button>
-    </form>
+    <>
+      <h2>신규 도서 등록</h2>
+      <form>
+        <input type="text" placeholder='title' 
+          value={title}
+          onChange={(e) => setTitle(e.target.value)}
+        />
+        <input type="text" placeholder='author' 
+          value={author}
+          onChange={(e) => setAuthor(e.target.value)}
+        />
+        <input type="text" placeholder='content' 
+          value={content}
+          onChange={(e) => setContent(e.target.value)}
+        />
+        <button
+          type="button"
+          onClick={() => {
+            handleAddBooks();
+          }}
+        >
+          신규 도서 등록
+        </button>
+      </form>
+    </>
   );
 }
