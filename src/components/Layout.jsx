@@ -2,8 +2,8 @@ import { NavLink, Link, Outlet } from "react-router-dom";
 
 export default function Layout() {
   return (
-    <div className="d-flex flex-column min-vh-100">
-      <nav className="navbar navbar-expand-sm navbar-light bg-body-tertiary shadow-sm sticky-top">
+    <div className="d-flex flex-column min-vh-100 bg-body-tertiary">
+      <nav className="navbar navbar-expand-sm navbar-dark bg-primary shadow sticky-top">
         <div className="container">
           <Link className="navbar-brand" to="/">
             📖 AI 표지 생성 도서 관리 시스템

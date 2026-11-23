@@ -90,7 +90,7 @@ export default function BookDetail() {
     }
   }
 
-  function handleEdit() {}
+  function handleEdit() { }
 
   // AI 표지 생성이 끝나면 화면의 book 상태에 즉시 반영
   function handleCoverGenerated(url) {
@@ -142,41 +142,45 @@ export default function BookDetail() {
           {/* AI 표지 생성 (E 담당 컴포넌트) */}
           <CoverGenerator book={book} onGenerated={handleCoverGenerated} />
 
-          <div className="row g-4 mt-2">
-            <div className="col-12 col-md-4 text-center">
-              {book.coverImageUrl ? (
-                <img
-                  src={book.coverImageUrl}
-                  alt={`${book.title} 표지`}
-                  className="img-fluid rounded shadow"
-                  style={{ maxWidth: 240 }}
-                />
-              ) : (
-                <div
-                  className="bg-light text-muted rounded d-flex align-items-center justify-content-center mx-auto"
-                  style={{ width: 200, height: 300 }}
-                >
-                  표지 없음
+          <div className="card shadow-sm border-0 mt-2">
+            <div className="card-body p-4">
+              <div className="row g-4">
+                <div className="col-12 col-md-4 text-center">
+                  {book.coverImageUrl ? (
+                    <img
+                      src={book.coverImageUrl}
+                      alt={`${book.title} 표지`}
+                      className="img-fluid rounded shadow"
+                      style={{ maxWidth: 240 }}
+                    />
+                  ) : (
+                    <div
+                      className="bg-light text-muted rounded d-flex align-items-center justify-content-center mx-auto"
+                      style={{ width: 200, height: 300 }}
+                    >
+                      표지 없음
+                    </div>
+                  )}
                 </div>
-              )}
-            </div>
 
-            <div className="col-12 col-md-8">
-              <h2 className="h5">책 내용</h2>
-              <p style={{ whiteSpace: "pre-wrap" }}>
-                {book.content || "등록된 도서 소개가 없어요."}
-              </p>
+                <div className="col-12 col-md-8">
+                  <h2 className="h5">책 내용</h2>
+                  <p style={{ whiteSpace: "pre-wrap" }}>
+                    {book.content || "등록된 도서 소개가 없어요."}
+                  </p>
 
-              <hr />
+                  <hr />
 
-              <p className="small text-muted mb-1">
-                등록일자: {formatDate(book.createdAt)}
-              </p>
-              {book.updatedAt && book.createdAt !== book.updatedAt && (
-                <p className="small text-muted mb-0">
-                  수정일자: {formatDate(book.updatedAt)}
-                </p>
-              )}
+                  <p className="small text-muted mb-1">
+                    등록일자: {formatDate(book.createdAt)}
+                  </p>
+                  {book.updatedAt && book.createdAt !== book.updatedAt && (
+                    <p className="small text-muted mb-0">
+                      수정일자: {formatDate(book.updatedAt)}
+                    </p>
+                  )}
+                </div>
+              </div>
             </div>
           </div>
 
