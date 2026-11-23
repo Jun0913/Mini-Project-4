@@ -98,7 +98,7 @@ export default function BookForm() {
       }
     }
 
-    const now = Date.now();
+    const now = new Date().toISOString();
     setSaving(true);
     try {
       const res = isEdit
