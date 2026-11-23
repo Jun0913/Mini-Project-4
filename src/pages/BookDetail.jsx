@@ -13,6 +13,18 @@ export default function BookDetail() {
   const [deleting, setDeleting] = useState(false);
   const [deleteError, setDeleteError] = useState("");
   const [deleteDone, setDeleteDone] = useState(false);
+  const [showCoverGenerator, setShowCoverGenerator] = useState(false);
+  const coverGeneratorRef = useRef(null);
+
+  // 토글을 열면 AI 표지 생성 영역이 보이도록 부드럽게 스크롤
+  useEffect(() => {
+    if (showCoverGenerator) {
+      coverGeneratorRef.current?.scrollIntoView({
+        behavior: "smooth",
+        block: "start",
+      });
+    }
+  }, [showCoverGenerator]);
 
   useEffect(() => {
     const cancelHandle = new AbortController();
@@ -139,9 +151,6 @@ export default function BookDetail() {
 
           <hr />
 
-          {/* AI 표지 생성 (E 담당 컴포넌트) */}
-          <CoverGenerator book={book} onGenerated={handleCoverGenerated} />
-
           <div className="card shadow-sm border-0 mt-2">
             <div className="card-body p-4">
               <div className="row g-4">
@@ -161,6 +170,19 @@ export default function BookDetail() {
                       표지 없음
                     </div>
                   )}
+
+                  <div className="mt-3">
+                    <button
+                      type="button"
+                      className={`btn btn-sm ${
+                        showCoverGenerator ? "btn-primary" : "btn-outline-primary"
+                      }`}
+                      aria-expanded={showCoverGenerator}
+                      onClick={() => setShowCoverGenerator((prev) => !prev)}
+                    >
+                      ✨ AI 표지 생성 {showCoverGenerator ? "▴" : "▾"}
+                    </button>
+                  </div>
                 </div>
 
                 <div className="col-12 col-md-8">
@@ -183,6 +205,13 @@ export default function BookDetail() {
               </div>
             </div>
           </div>
+
+          {/* AI 표지 생성 (E 담당 컴포넌트): 토글 버튼을 눌렀을 때만 표시 */}
+          {showCoverGenerator && (
+            <div ref={coverGeneratorRef} style={{ scrollMarginTop: 80 }}>
+              <CoverGenerator book={book} onGenerated={handleCoverGenerated} />
+            </div>
+          )}
 
           <div className="text-center mt-5">
             <Link to="/" className="btn btn-outline-secondary">
