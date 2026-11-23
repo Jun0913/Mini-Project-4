@@ -125,9 +125,9 @@ export default function BookForm() {
 
   return (
     <div className="col-md-8 col-lg-6 mx-auto">
-      <div className="card shadow-sm border-0">
+      <div className="card shadow-sm border-0">        
         <div className="card-body p-4">
-          <h1 className="h3 mb-4">{isEdit ? "도서 수정" : "신규 도서 등록"}</h1>
+          <h1 className="h3 mb-4">{isEdit ? "✏️ 도서 수정" : "📝 신규 도서 등록"}</h1>
           <p className="mb-4">{isEdit ? "수정할 도서 정보를 입력하세요" : "시스템에 등록하실 도서의 정보를 입력하세요"}</p>
           <hr />
           <form onSubmit={handleSaveBook}>

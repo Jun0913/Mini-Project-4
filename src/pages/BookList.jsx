@@ -67,9 +67,9 @@ export default function BookList() {
       {books.length === 0 ? (
         <p className="text-muted">등록된 도서가 없습니다.</p>
       ) : (
-        <div className="row g-4">
+        <div className="row g-3">
           {books.map((book) => (
-            <div className="col-6 col-md-4 col-lg-3" key={book.id}>
+            <div className="col-6 col-md-3 col-lg-2" key={book.id}>
               <div className="card h-100 shadow-sm">
                 {book.coverImageUrl ? (
                   <img
