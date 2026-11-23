@@ -130,9 +130,9 @@ export default function BookDetail() {
 
       {!loading && !error && book && (
         <>
-          <div className="d-flex align-items-end gap-2 flex-wrap">
-            <h1 className="h3 mb-0">{book.title}</h1>
-            <span className="text-muted me-auto">{book.author}</span>
+          <div className="d-flex align-items-end gap-2 flex-wrap border-bottom border-2 pb-2">
+            <h1 className="h2 mb-0">{book.title}</h1>
+            <span className="h5 mb-0 me-auto">{book.author}</span>
 
             <button
               type="button"
@@ -152,9 +152,7 @@ export default function BookDetail() {
             </button>
           </div>
 
-          <hr />
-
-          <div className="card shadow-sm border-0 mt-2">
+          <div className="card shadow-sm border-0 mt-4">
             <div className="card-body p-4">
               <div className="row g-4">
                 <div className="col-12 col-md-4 text-center">

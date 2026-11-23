@@ -1,63 +1,77 @@
 /* 기본 스타일은 Bootstrap이 담당합니다. 프로젝트 공통 커스텀 스타일만 여기에 추가하세요. */
 
+/*
+  색상 팔레트
+  - navbar: #C7E3E3 (연한 민트)  → 199, 227, 227
+  - 본문 배경: #D4E0E0 (회색빛 민트) → .app-bg
+  - 포인트: #31ADAA (틸)        → 49, 173, 170
+  색을 바꾸려면 아래 값과 버튼 블록의 값을 함께 수정하세요.
+*/
 :root {
   /* 모든 페이지의 글꼴 고정 */
   --bs-body-font-family: "NanumBarunGothic", sans-serif;
 
-  /* 페이지 배경(크림색): Layout의 bg-body-tertiary가 이 값을 씁니다 */
-  --bs-tertiary-bg: #faf6ef;
-  --bs-tertiary-bg-rgb: 250, 246, 239;
+  /* navbar 배경: Layout의 bg-body-tertiary가 이 값을 씁니다 */
+  --bs-tertiary-bg: #c7e3e3;
+  --bs-tertiary-bg-rgb: 199, 227, 227;
 
-  /* 포인트 색(갈색): 색을 바꾸려면 아래 값만 수정하세요 */
-  --bs-primary: #6f4a32;
-  --bs-primary-rgb: 111, 74, 50;
-  --bs-link-color: #6f4a32;
-  --bs-link-color-rgb: 111, 74, 50;
-  --bs-link-hover-color: #4f3423;
-  --bs-link-hover-color-rgb: 79, 52, 35;
+  /* 포인트 색: navbar(bg-primary) 등에 쓰입니다 */
+  --bs-primary: #31adaa;
+  --bs-primary-rgb: 49, 173, 170;
+
+  /* 링크는 흰 배경에서 잘 읽히도록 포인트 색보다 한 단계 진하게 */
+  --bs-link-color: #238583;
+  --bs-link-color-rgb: 35, 133, 131;
+  --bs-link-hover-color: #1a6664;
+  --bs-link-hover-color-rgb: 26, 102, 100;
 }
 
 /* 부트스트랩 버튼은 --bs-primary를 직접 쓰지 않아서 따로 덮어씁니다 */
 .btn-primary {
-  --bs-btn-bg: #6f4a32;
-  --bs-btn-border-color: #6f4a32;
-  --bs-btn-hover-bg: #5c3d29;
-  --bs-btn-hover-border-color: #4f3423;
-  --bs-btn-active-bg: #4f3423;
-  --bs-btn-active-border-color: #452d1f;
-  --bs-btn-disabled-bg: #6f4a32;
-  --bs-btn-disabled-border-color: #6f4a32;
-  --bs-btn-focus-shadow-rgb: 111, 74, 50;
+  --bs-btn-bg: #31adaa;
+  --bs-btn-border-color: #31adaa;
+  --bs-btn-hover-bg: #299693;
+  --bs-btn-hover-border-color: #238583;
+  --bs-btn-active-bg: #238583;
+  --bs-btn-active-border-color: #1f7573;
+  --bs-btn-disabled-bg: #31adaa;
+  --bs-btn-disabled-border-color: #31adaa;
+  --bs-btn-focus-shadow-rgb: 49, 173, 170;
 }
 
 .btn-outline-primary {
-  --bs-btn-color: #6f4a32;
-  --bs-btn-border-color: #6f4a32;
-  --bs-btn-hover-bg: #6f4a32;
-  --bs-btn-hover-border-color: #6f4a32;
-  --bs-btn-active-bg: #6f4a32;
-  --bs-btn-active-border-color: #6f4a32;
-  --bs-btn-disabled-color: #6f4a32;
-  --bs-btn-disabled-border-color: #6f4a32;
-  --bs-btn-focus-shadow-rgb: 111, 74, 50;
+  --bs-btn-color: #238583;
+  --bs-btn-border-color: #31adaa;
+  --bs-btn-hover-bg: #31adaa;
+  --bs-btn-hover-border-color: #31adaa;
+  --bs-btn-active-bg: #31adaa;
+  --bs-btn-active-border-color: #31adaa;
+  --bs-btn-disabled-color: #31adaa;
+  --bs-btn-disabled-border-color: #31adaa;
+  --bs-btn-focus-shadow-rgb: 49, 173, 170;
 }
 
-/* 보조 버튼(취소 등)도 따뜻한 톤으로 맞춥니다 */
+/* 보조 버튼(취소 등)은 민트와 어울리는 차분한 청회색 */
 .btn-outline-secondary {
-  --bs-btn-color: #8a7767;
-  --bs-btn-border-color: #8a7767;
-  --bs-btn-hover-bg: #8a7767;
-  --bs-btn-hover-border-color: #8a7767;
-  --bs-btn-active-bg: #75645a;
-  --bs-btn-active-border-color: #75645a;
-  --bs-btn-disabled-color: #8a7767;
-  --bs-btn-disabled-border-color: #8a7767;
-  --bs-btn-focus-shadow-rgb: 138, 119, 103;
+  --bs-btn-color: #5f7f80;
+  --bs-btn-border-color: #5f7f80;
+  --bs-btn-hover-bg: #5f7f80;
+  --bs-btn-hover-border-color: #5f7f80;
+  --bs-btn-active-bg: #4d6869;
+  --bs-btn-active-border-color: #4d6869;
+  --bs-btn-disabled-color: #5f7f80;
+  --bs-btn-disabled-border-color: #5f7f80;
+  --bs-btn-focus-shadow-rgb: 95, 127, 128;
 }
 
-/* 입력창을 클릭했을 때의 하이라이트(기본 파란색)를 따뜻한 색으로 */
+/* 입력창을 클릭했을 때의 하이라이트(기본 파란색)를 포인트 색으로 */
 .form-control:focus,
 .form-select:focus {
-  border-color: #b08968;
-  box-shadow: 0 0 0 0.25rem rgba(111, 74, 50, 0.25);
+  border-color: #c7e1e1;
+  box-shadow: 0 0 0 0.25rem rgba(49, 173, 170, 0.25);
+}
+
+/* 내비게이션 바 아래 본문 영역의 배경(채도 낮은 회색톤). Layout에서 사용 */
+.app-bg {
+  background-color: #f1fbfb;
 }
