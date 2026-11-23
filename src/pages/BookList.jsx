@@ -76,35 +76,39 @@ export default function BookList() {
         </Link>
       </div>
 
-      {/* 검색창 */}
-      <div className="mb-2">
-        <div className="input-group">
-          <span className="input-group-text">🔍</span>
-          <input
-            type="text"
-            className="form-control"
-            placeholder="제목 또는 저자로 검색"
-            value={keyword}
-            onChange={(e) => setKeyword(e.target.value)}
-            aria-label="도서 검색"
-          />
-          {keyword && (
-            <button
-              type="button"
-              className="btn btn-outline-secondary"
-              onClick={() => setKeyword("")}
-            >
-              지우기
-            </button>
-          )}
+      <div className="card card-outline shadow-sm mb-4">
+        <div className="card-body">
+          {/* 검색창 */}
+          <div className="mb-2">
+            <div className="input-group">
+              <span className="input-group-text">🔍</span>
+              <input
+                type="text"
+                className="form-control"
+                placeholder="제목 또는 저자로 검색"
+                value={keyword}
+                onChange={(e) => setKeyword(e.target.value)}
+                aria-label="도서 검색"
+              />
+              {keyword && (
+                <button
+                  type="button"
+                  className="btn btn-outline-secondary"
+                  onClick={() => setKeyword("")}
+                >
+                  지우기
+                </button>
+              )}
+            </div>
+          </div>
+
+          <p className="small text-muted mb-0">
+            {keyword.trim()
+              ? `검색 결과 ${filteredBooks.length}권 / 전체 ${books.length}권`
+              : `전체 ${books.length}권`}
+          </p>
         </div>
       </div>
-
-      <p className="small text-muted mb-4">
-        {keyword.trim()
-          ? `검색 결과 ${filteredBooks.length}권 / 전체 ${books.length}권`
-          : `전체 ${books.length}권`}
-      </p>
 
       {books.length === 0 ? (
         <p className="text-muted">등록된 도서가 없습니다.</p>
@@ -114,7 +118,7 @@ export default function BookList() {
         <div className="row g-3">
           {filteredBooks.map((book) => (
             <div className="col-6 col-sm-4 col-md-3 col-lg-2" key={book.id}>
-              <div className="card h-100 shadow-sm">
+              <div className="card card-outline h-100 shadow-sm">
                 {book.coverImageUrl ? (
                   <img
                     src={book.coverImageUrl}

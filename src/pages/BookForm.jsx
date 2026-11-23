@@ -1,4 +1,4 @@
-﻿import { useEffect, useState } from 'react';
+﻿import { useEffect, useRef, useState } from 'react';
 import { API_URL } from '../api/books';
 import { useNavigate, useParams } from 'react-router-dom';
 
@@ -16,6 +16,9 @@ export default function BookForm() {
   const [originalBook, setOriginalBook] = useState(null);
   const [loadError, setLoadError] = useState("");
   const [saving, setSaving] = useState(false);
+  // alert() 대신 쓰는 자체 팝업. done이 true면 팝업을 닫을 때 목록으로 이동
+  const [notice, setNotice] = useState({ text: "", done: false });
+  const noticeDialog = useRef(null);
 
   if (id !== previousId) {
     setPreviousId(id);
@@ -76,13 +79,18 @@ export default function BookForm() {
     return res;
   }
 
+  function showNotice(text, done = false) {
+    setNotice({ text, done });
+    noticeDialog.current?.showModal();
+  }
+
   const handleSaveBook = async (event) => {
     event.preventDefault();
     if (saving || (isEdit && !originalBook)) return;
 
     const { title, author, content } = form;
     if (!title.trim() || !author.trim() || !content.trim()) {
-      alert("⚠️ 제목, 저자, 내용을 모두 입력해 주세요.");
+      showNotice("⚠️ 제목, 저자, 내용을 모두 입력해 주세요.");
       return;
     }
 
@@ -93,7 +101,7 @@ export default function BookForm() {
       if (content !== originalBook.content) changes.content = content;
 
       if (Object.keys(changes).length === 0) {
-        alert("변경된 항목이 없습니다.");
+        showNotice("변경된 항목이 없습니다.");
         return;
       }
     }
@@ -111,10 +119,10 @@ export default function BookForm() {
 
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
 
-      alert(`✅ 도서 ${action}이 완료되었습니다.`);
-      navigate('/');
+      // 팝업의 '확인'을 누르거나 닫으면 목록으로 이동 (dialog의 onClose 참고)
+      showNotice(`✅ 도서 ${action}이 완료되었습니다.`, true);
     } catch (err) {
-      alert(`⚠️ 도서 ${action}에 실패했습니다.\n${err.message}`);
+      showNotice(`⚠️ 도서 ${action}에 실패했습니다.\n${err.message}`);
     } finally {
       setSaving(false);
     }
@@ -125,7 +133,7 @@ export default function BookForm() {
 
   return (
     <div className="col-md-8 col-lg-6 mx-auto">
-      <div className="card shadow-sm border-0">        
+      <div className="card card-outline shadow-sm">        
         <div className="card-body p-4">
           <h1 className="h3 mb-4">{isEdit ? "✏️ 도서 수정" : "📝 신규 도서 등록"}</h1>
           <p className="mb-4">{isEdit ? "수정할 도서 정보를 입력하세요" : "시스템에 등록하실 도서의 정보를 입력하세요"}</p>
@@ -186,6 +194,31 @@ export default function BookForm() {
           </form>
         </div>
       </div>
+
+      <dialog
+        ref={noticeDialog}
+        aria-labelledby="notice-text"
+        className="rounded-3 shadow p-3 text-center m-auto"
+        style={{
+          width: 340,
+          maxWidth: "calc(100vw - 32px)",
+          border: "1px solid #7cc8c6",
+        }}
+        onClose={() => {
+          if (notice.done) navigate('/');
+        }}
+      >
+        <p id="notice-text" className="mb-3" style={{ whiteSpace: "pre-line" }}>
+          {notice.text}
+        </p>
+        <button
+          type="button"
+          className="btn btn-primary btn-sm"
+          onClick={() => noticeDialog.current?.close()}
+        >
+          확인
+        </button>
+      </dialog>
     </div>
   );
 }

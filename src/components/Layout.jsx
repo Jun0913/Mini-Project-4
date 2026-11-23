@@ -12,12 +12,19 @@ export default function Layout() {
             📖 AI 표지 생성 도서 관리 시스템
           </Link>
           <div className="navbar-nav flex-row align-items-center gap-3">
-            <NavLink className="nav-link" to="/" end>
+            <NavLink
+              className="nav-link nav-pill"
+              to="/"
+              end
+            >
               📚 도서 목록
             </NavLink>
-            <Link className="btn btn-primary" to="/books/new">
+            <NavLink
+              className="nav-link nav-pill"
+              to="/books/new"
+            >
               📝 새 도서 등록
-            </Link>
+            </NavLink>
           </div>
         </div>
       </nav>

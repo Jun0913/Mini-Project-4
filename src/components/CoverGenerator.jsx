@@ -93,7 +93,7 @@ export default function CoverGenerator({ book, onGenerated }) {
   };
 
   return (
-    <section className="card shadow-sm border-0 my-4">
+    <section className="card card-outline shadow-sm my-4">
       <div className="card-body">
         <h2 className="h5 card-title mb-3">AI 표지 생성</h2>
 

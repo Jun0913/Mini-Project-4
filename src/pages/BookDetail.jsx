@@ -130,7 +130,10 @@ export default function BookDetail() {
 
       {!loading && !error && book && (
         <>
-          <div className="d-flex align-items-end gap-2 flex-wrap border-bottom border-2 pb-2">
+          <div
+            className="d-flex align-items-end gap-2 flex-wrap border-bottom border-1 pb-2"
+            style={{ "--bs-border-color": "#7cc8c6" }}
+          >
             <h1 className="h2 mb-0">{book.title}</h1>
             <span className="h5 mb-0 me-auto">{book.author}</span>
 
@@ -152,7 +155,7 @@ export default function BookDetail() {
             </button>
           </div>
 
-          <div className="card shadow-sm border-0 mt-4">
+          <div className="card card-outline shadow-sm mt-4">
             <div className="card-body p-4">
               <div className="row g-4">
                 <div className="col-12 col-md-4 text-center">
@@ -223,8 +226,12 @@ export default function BookDetail() {
           <dialog
             ref={deleteDialog}
             aria-labelledby="delete-title"
-            className="rounded-3 border-0 shadow p-3 text-center m-auto"
-            style={{ width: 260, maxWidth: "calc(100vw - 32px)" }}
+            className="rounded-3 shadow p-3 text-center m-auto"
+            style={{
+              width: 340,
+              maxWidth: "calc(100vw - 32px)",
+              border: "1px solid #7cc8c6",
+            }}
             onCancel={(event) => {
               if (deleting) event.preventDefault();
             }}
