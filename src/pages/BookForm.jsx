@@ -44,28 +44,61 @@ export default function BookForm() {
   }
   
   return (
-    <>
-      <h2>신규 도서 등록</h2>
+    <div className="col-md-8 col-lg-6 mx-auto">
+      <h1 className="h3 mb-4">신규 도서 등록</h1>
+      <p className="mb-4">등록하실 도서의 정보를 입력해주세요</p>
+      <hr />
       <form>
-        <input type="text" placeholder='title' 
-          value={title}
-          onChange={(e) => setTitle(e.target.value)}
-        />
-        <input type="text" placeholder='author' 
-          value={author}
-          onChange={(e) => setAuthor(e.target.value)}
-        />
-        <input type="text" placeholder='content' 
-          value={content}
-          onChange={(e) => setContent(e.target.value)}
-        />
-        <button
-          type="button"
-          onClick={() => handleAddBooks()}
-        >
-          신규 도서 등록
-        </button>
+        <div className="mb-3">
+          <label htmlFor="book-title" className="form-label">제목</label>
+          <input
+            id="book-title"
+            type="text"
+            className="form-control"
+            placeholder="도서 제목을 입력하세요"
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
+          />
+        </div>
+        <div className="mb-3">
+          <label htmlFor="book-author" className="form-label">저자</label>
+          <input
+            id="book-author"
+            type="text"
+            className="form-control"
+            placeholder="저자를 입력하세요"
+            value={author}
+            onChange={(e) => setAuthor(e.target.value)}
+          />
+        </div>
+        <div className="mb-4">
+          <label htmlFor="book-content" className="form-label">내용</label>
+          <textarea
+            id="book-content"
+            className="form-control"
+            rows={8}
+            placeholder="도서 소개를 입력하세요"
+            value={content}
+            onChange={(e) => setContent(e.target.value)}
+          />
+        </div>
+        <div className="d-flex gap-2 justify-content-end">
+          <button
+            type="button"
+            className="btn btn-outline-secondary"
+            onClick={() => navigate('/')}
+          >
+            취소
+          </button>
+          <button
+            type="button"
+            className="btn btn-primary"
+            onClick={() => handleAddBooks()}
+          >
+            신규 도서 등록
+          </button>
+        </div>
       </form>
-    </>
+    </div>
   );
 }

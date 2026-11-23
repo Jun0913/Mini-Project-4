@@ -2,7 +2,7 @@ import { NavLink, Link, Outlet } from "react-router-dom";
 
 export default function Layout() {
   return (
-    <>
+    <div className="d-flex flex-column min-vh-100">
       <nav className="navbar navbar-expand-sm navbar-light bg-body-tertiary shadow-sm sticky-top">
         <div className="container">
           <Link className="navbar-brand" to="/">
@@ -18,9 +18,9 @@ export default function Layout() {
           </div>
         </div>
       </nav>
-      <main className="container py-4">
+      <main className="container py-5 d-flex flex-column flex-grow-1 ">
         <Outlet />
       </main>
-    </>
+    </div>
   );
 }

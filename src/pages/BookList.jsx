@@ -58,7 +58,7 @@ export default function BookList() {
   return (
     <section>
       <div className="d-flex justify-content-between align-items-center mb-4">
-        <h1 className="h3 mb-0">📚 도서 목록</h1>
+        <h1 className="h3 mb-4">📚 도서 목록</h1>
         <Link to="/books/new" className="btn btn-primary">
           📝 도서 등록
         </Link>

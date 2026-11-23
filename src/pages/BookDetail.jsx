@@ -98,155 +98,153 @@ export default function BookDetail() {
   }
 
   return (
-    <div>
-      <section>
-        {loading && <p>도서 정보를 불러오는 중이에요...⌛</p>}
+    <section>
+      {loading && (
+        <div className="text-center py-5">
+          <div className="spinner-border" role="status">
+            <span className="visually-hidden">도서 정보를 불러오는 중이에요...</span>
+          </div>
+        </div>
+      )}
 
-        {!loading && error && <p role="alert">{error}</p>}
+      {!loading && error && (
+        <div className="alert alert-danger" role="alert">
+          {error}
+        </div>
+      )}
 
-        {!loading && !error && book && (
-          <>
-            <div style={{ display: "flex", alignItems: "flex-end", gap: "8px" }}>
-              <h1 style={{ margin: 0 }}>{book.title}</h1>
-              <h3 style={{ margin: 0, marginRight: "auto" }}>{book.author}</h3>
+      {!loading && !error && book && (
+        <>
+          <div className="d-flex align-items-end gap-2 flex-wrap">
+            <h1 className="h3 mb-0">{book.title}</h1>
+            <span className="text-muted me-auto">{book.author}</span>
 
-              <button
-                type="button"
-                onClick={openDeleteDialog}
-                aria-label="도서 삭제"
-              >
-                🗑️
-              </button>
-
-              <button type="button" onClick={handleEdit}>
-                수정
-              </button>
-            </div>
-
-            <hr />
-
-            {/* AI 표지 생성 (E 담당 컴포넌트) */}
-            <CoverGenerator book={book} onGenerated={handleCoverGenerated} />
-
-            <div
-              style={{
-                display: "flex",
-                gap: "24px",
-                alignItems: "flex-start",
-                marginTop: "24px",
-              }}
+            <button
+              type="button"
+              className="btn btn-outline-danger btn-sm"
+              onClick={openDeleteDialog}
+              aria-label="도서 삭제"
             >
+              🗑️ 삭제
+            </button>
+
+            <button
+              type="button"
+              className="btn btn-outline-primary btn-sm"
+              onClick={handleEdit}
+            >
+              ✏️ 수정
+            </button>
+          </div>
+
+          <hr />
+
+          {/* AI 표지 생성 (E 담당 컴포넌트) */}
+          <CoverGenerator book={book} onGenerated={handleCoverGenerated} />
+
+          <div className="row g-4 mt-2">
+            <div className="col-12 col-md-4 text-center">
               {book.coverImageUrl ? (
                 <img
                   src={book.coverImageUrl}
                   alt={`${book.title} 표지`}
-                  style={{
-                    width: 200,
-                    borderRadius: 8,
-                    boxShadow: "0 2px 8px rgba(0,0,0,0.25)",
-                  }}
+                  className="img-fluid rounded shadow"
+                  style={{ maxWidth: 240 }}
                 />
               ) : (
                 <div
-                  style={{
-                    width: 200,
-                    height: 300,
-                    borderRadius: 8,
-                    background: "#eee",
-                    color: "#888",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                  }}
+                  className="bg-light text-muted rounded d-flex align-items-center justify-content-center mx-auto"
+                  style={{ width: 200, height: 300 }}
                 >
                   표지 없음
                 </div>
               )}
-
-              <div style={{ flex: 1, textAlign: "center" }}>
-                <h3>책 내용</h3>
-                <p>{book.content || "등록된 도서 소개가 없어요."}</p>
-
-                <hr />
-
-                <p>등록일자: {formatDate(book.createdAt)}</p>
-
-                {book.updatedAt && book.createdAt !== book.updatedAt && (
-                  <p>수정일자: {formatDate(book.updatedAt)}</p>
-                )}
-              </div>
             </div>
 
-            <div style={{ textAlign: "center", marginTop: "32px" }}>
-              <Link to="/">도서 목록으로 돌아가기</Link>
-            </div>
-
-            <dialog
-              ref={deleteDialog}
-              aria-labelledby="delete-title"
-              style={{
-                width: "220px",
-                maxWidth: "calc(100vw - 32px)",
-                boxSizing: "border-box",
-                padding: "16px",
-                margin: "auto",
-                borderRadius: "12px",
-                textAlign: "center",
-              }}
-              onCancel={(event) => {
-                if (deleting) event.preventDefault();
-              }}
-              onClose={() => {
-                // 삭제 완료 상태에서 팝업을 닫으면 목록으로 이동
-                if (deleteDone) window.location.replace("/");
-              }}
-            >
-              <p id="delete-title" style={{ margin: "0 0 12px" }}>
-                {deleteDone
-                  ? "도서 삭제 완료 🗑️"
-                  : `‘${book.title}’ 도서를 삭제할까요?`}
+            <div className="col-12 col-md-8">
+              <h2 className="h5">책 내용</h2>
+              <p style={{ whiteSpace: "pre-wrap" }}>
+                {book.content || "등록된 도서 소개가 없어요."}
               </p>
 
-              {deleteError && <p role="alert">{deleteError}</p>}
+              <hr />
 
-              <div
-                style={{
-                  display: "flex",
-                  justifyContent: "center",
-                  gap: "12px",
-                }}
-              >
-                {deleteDone ? (
+              <p className="small text-muted mb-1">
+                등록일자: {formatDate(book.createdAt)}
+              </p>
+              {book.updatedAt && book.createdAt !== book.updatedAt && (
+                <p className="small text-muted mb-0">
+                  수정일자: {formatDate(book.updatedAt)}
+                </p>
+              )}
+            </div>
+          </div>
+
+          <div className="text-center mt-5">
+            <Link to="/" className="btn btn-outline-secondary">
+              도서 목록으로 돌아가기
+            </Link>
+          </div>
+
+          <dialog
+            ref={deleteDialog}
+            aria-labelledby="delete-title"
+            className="rounded-3 border-0 shadow p-3 text-center m-auto"
+            style={{ width: 260, maxWidth: "calc(100vw - 32px)" }}
+            onCancel={(event) => {
+              if (deleting) event.preventDefault();
+            }}
+            onClose={() => {
+              // 삭제 완료 상태에서 팝업을 닫으면 목록으로 이동
+              if (deleteDone) window.location.replace("/");
+            }}
+          >
+            <p id="delete-title" className="mb-3">
+              {deleteDone
+                ? "도서 삭제 완료 🗑️"
+                : `‘${book.title}’ 도서를 삭제할까요?`}
+            </p>
+
+            {deleteError && (
+              <div className="alert alert-danger py-2 small" role="alert">
+                {deleteError}
+              </div>
+            )}
+
+            <div className="d-flex justify-content-center gap-2">
+              {deleteDone ? (
+                <button
+                  type="button"
+                  className="btn btn-primary btn-sm"
+                  onClick={() => deleteDialog.current.close()}
+                >
+                  확인
+                </button>
+              ) : (
+                <>
                   <button
                     type="button"
-                    onClick={() => deleteDialog.current.close()}
+                    className="btn btn-danger btn-sm"
+                    onClick={handleDelete}
+                    disabled={deleting}
                   >
-                    확인
+                    {deleting ? "삭제 중…" : "예"}
                   </button>
-                ) : (
-                  <>
-                    <button
-                      type="button"
-                      onClick={handleDelete}
-                      disabled={deleting}
-                    >
-                      {deleting ? "삭제 중…" : "예"}
-                    </button>
 
-                    <button
-                      type="button"
-                      onClick={() => deleteDialog.current.close()}
-                      disabled={deleting}
-                    >
-                      아니오
-                    </button>
-                  </>
-                )}
-              </div>
-            </dialog>
-          </>
-        )}
-      </section>
-    </div>
+                  <button
+                    type="button"
+                    className="btn btn-outline-secondary btn-sm"
+                    onClick={() => deleteDialog.current.close()}
+                    disabled={deleting}
+                  >
+                    아니오
+                  </button>
+                </>
+              )}
+            </div>
+          </dialog>
+        </>
+      )}
+    </section>
   );
 }
