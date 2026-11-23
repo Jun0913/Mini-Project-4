@@ -179,7 +179,7 @@ export default function BookForm() {
               <button
                 type="button"
                 className="btn btn-outline-secondary"
-                onClick={() => navigate('/')}
+                onClick={() => navigate('/books')}
               >
                 ❌ 취소
               </button>
@@ -205,7 +205,7 @@ export default function BookForm() {
           border: "1px solid #7cc8c6",
         }}
         onClose={() => {
-          if (notice.done) navigate('/');
+          if (notice.done) navigate('/books');
         }}
       >
         <p id="notice-text" className="mb-3" style={{ whiteSpace: "pre-line" }}>

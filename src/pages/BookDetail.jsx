@@ -218,7 +218,7 @@ export default function BookDetail() {
           )}
 
           <div className="text-center mt-5">
-            <Link to="/" className="btn btn-outline-secondary">
+            <Link to="/books" className="btn btn-outline-secondary">
               도서 목록으로 돌아가기
             </Link>
           </div>
@@ -237,7 +237,7 @@ export default function BookDetail() {
             }}
             onClose={() => {
               // 삭제 완료 상태에서 팝업을 닫으면 목록으로 이동
-              if (deleteDone) window.location.replace("/");
+              if (deleteDone) window.location.replace("/books");
             }}
           >
             <p id="delete-title" className="mb-3">
