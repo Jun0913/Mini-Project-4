@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { API_URL } from "../api/books";
 
 const OPENAI_URL = "https://api.openai.com/v1/images/generations";
+const OPENAI_EDIT_URL = "https://api.openai.com/v1/images/edits";
 
 const MODEL_OPTIONS = [
   { value: "gpt-image-2:1024x1536", model: "gpt-image-2", size: "1024x1536", label: "GPT Image 2 (1024x1536)" },
@@ -13,7 +14,8 @@ export default function CoverGenerator({ book, onGenerated }) {
   const [apiKey, setApiKey] = useState("");
   const [modelValue, setModelValue] = useState(MODEL_OPTIONS[0].value);
   const [quality, setQuality] = useState("low");
-  const [mood, setMood] = useState("");
+  const [revision, setRevision] = useState("");
+  const [useCurrentCover, setUseCurrentCover] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [previewUrl, setPreviewUrl] = useState("");
@@ -27,20 +29,24 @@ export default function CoverGenerator({ book, onGenerated }) {
     }
   }, [previewUrl]);
 
-  const buildPrompt = () => {
+  const buildPrompt = (referenceImage) => {
     const content = (book.content || "").slice(0, 500);
     const prompt = `다음 책에 어울리는 도서 표지 일러스트를 만들어주세요.
 제목: ${book.title}
 저자: ${book.author || "미상"}
 내용: ${content}
 책 표지 디자인, 세로형 구도, 제목이 돋보이는 분위기.`;
-    const requestedMood = mood.trim();
+    const coverPrompt = referenceImage
+      ? `${prompt}
+제공된 현재 표지의 구도와 주요 요소를 참고해 새 시안을 만들어주세요. 요청한 변경 사항 외에는 기존 요소를 가능한 한 유지해주세요.`
+      : prompt;
+    const requestedRevision = revision.trim();
 
-    if (!book.coverImageUrl || !requestedMood) return prompt;
+    if (!book.coverImageUrl || !requestedRevision) return coverPrompt;
 
-    return `${prompt}
-위 책의 제목, 저자, 내용을 바탕으로 다음 분위기를 색감과 그림 스타일에 반영해주세요.
-원하는 분위기: ${requestedMood}`;
+    return `${coverPrompt}
+책의 제목, 저자, 내용과 어울리도록 새 표지에 다음 요청 사항을 반영해주세요.
+요청 사항: ${requestedRevision}`;
   };
 
   async function saveCover(dataUrl) {
@@ -85,25 +91,30 @@ export default function CoverGenerator({ book, onGenerated }) {
       return;
     }
     const selected = MODEL_OPTIONS.find((o) => o.value === modelValue);
+    const referenceImage = useCurrentCover ? book.coverImageUrl : "";
+    const requestBody = {
+      model: selected.model,
+      prompt: buildPrompt(referenceImage),
+      n: 1,
+      size: selected.size,
+      quality,
+      output_format: "png",
+    };
+    if (referenceImage) {
+      requestBody.images = [{ image_url: referenceImage }];
+    }
 
     setLoading(true);
     setError("");
 
     try {
-      const res = await fetch(OPENAI_URL, {
+      const res = await fetch(referenceImage ? OPENAI_EDIT_URL : OPENAI_URL, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${apiKey.trim()}`,
         },
-        body: JSON.stringify({
-          model: selected.model,
-          prompt: buildPrompt(),
-          n: 1,
-          size: selected.size,
-          quality,
-          output_format: "png",
-        }),
+        body: JSON.stringify(requestBody),
       });
 
       if (!res.ok) {
@@ -189,14 +200,27 @@ export default function CoverGenerator({ book, onGenerated }) {
 
         {book.coverImageUrl && (
           <div className="mb-3">
-            <label htmlFor="cg-mood" className="form-label">원하는 분위기 (선택)</label>
+            <div className="form-check mb-2">
+              <input
+                id="cg-reference-cover"
+                type="checkbox"
+                className="form-check-input"
+                checked={useCurrentCover}
+                onChange={(e) => setUseCurrentCover(e.target.checked)}
+                disabled={loading}
+              />
+              <label htmlFor="cg-reference-cover" className="form-check-label">현재 표지 참고</label>
+            </div>
+            <label htmlFor="cg-revision" className="form-label">요청 사항 (선택)</label>
             <input
-              id="cg-mood"
+              id="cg-revision"
               type="text"
               className="form-control"
-              placeholder="예: 따뜻한 수채화 느낌"
-              value={mood}
-              onChange={(e) => setMood(e.target.value)}
+              placeholder={useCurrentCover
+                ? "예: 구도는 유지하고 제목만 더 크게 해주세요"
+                : "예: 짙은 남색 배경에 제목을 크게 배치해 주세요"}
+              value={revision}
+              onChange={(e) => setRevision(e.target.value)}
               disabled={loading}
             />
           </div>
