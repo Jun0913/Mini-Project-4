@@ -1,10 +1,11 @@
 import { useEffect, useRef, useState } from "react";
-import { Link, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { API_URL } from "../api/books";
 import CoverGenerator from "../components/CoverGenerator";
 
 export default function BookDetail() {
   const { id } = useParams(); // id 읽기
+  const navigate = useNavigate();
   const deleteDialog = useRef(null);
 
   const [book, setBook] = useState(null);
@@ -102,7 +103,9 @@ export default function BookDetail() {
     }
   }
 
-  function handleEdit() { }
+  function handleEdit() {
+    navigate(`/books/${id}/edit`);
+  }
 
   // AI 표지 생성이 끝나면 화면의 book 상태에 즉시 반영
   function handleCoverGenerated(url) {
