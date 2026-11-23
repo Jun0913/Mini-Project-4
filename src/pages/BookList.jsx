@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import { API_URL } from "../api/books.js";
 
@@ -6,6 +6,7 @@ export default function BookList() {
   const [books, setBooks] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [keyword, setKeyword] = useState("");
 
   useEffect(() => {
     const controller = new AbortController();
@@ -38,6 +39,17 @@ export default function BookList() {
     return () => controller.abort();
   }, []);
 
+  // 제목 또는 저자에 검색어가 포함된 도서만 표시 (대소문자 무시)
+  const filteredBooks = useMemo(() => {
+    const q = keyword.trim().toLowerCase();
+    if (!q) return books;
+    return books.filter(
+      (book) =>
+        (book.title || "").toLowerCase().includes(q) ||
+        (book.author || "").toLowerCase().includes(q)
+    );
+  }, [books, keyword]);
+
   if (loading) {
     return (
       <div className="text-center py-5">
@@ -57,19 +69,51 @@ export default function BookList() {
 
   return (
     <section>
-      <div className="d-flex justify-content-between align-items-center mb-4">
-        <h1 className="h3 mb-4">📚 도서 목록</h1>
+      <div className="d-flex justify-content-between align-items-center mb-3">
+        <h1 className="h3 mb-0">📚 도서 목록</h1>
         <Link to="/books/new" className="btn btn-primary">
           📝 도서 등록
         </Link>
       </div>
 
+      {/* 검색창 */}
+      <div className="mb-2">
+        <div className="input-group">
+          <span className="input-group-text">🔍</span>
+          <input
+            type="text"
+            className="form-control"
+            placeholder="제목 또는 저자로 검색"
+            value={keyword}
+            onChange={(e) => setKeyword(e.target.value)}
+            aria-label="도서 검색"
+          />
+          {keyword && (
+            <button
+              type="button"
+              className="btn btn-outline-secondary"
+              onClick={() => setKeyword("")}
+            >
+              지우기
+            </button>
+          )}
+        </div>
+      </div>
+
+      <p className="small text-muted mb-4">
+        {keyword.trim()
+          ? `검색 결과 ${filteredBooks.length}권 / 전체 ${books.length}권`
+          : `전체 ${books.length}권`}
+      </p>
+
       {books.length === 0 ? (
         <p className="text-muted">등록된 도서가 없습니다.</p>
+      ) : filteredBooks.length === 0 ? (
+        <p className="text-muted">‘{keyword}’에 해당하는 도서가 없습니다.</p>
       ) : (
         <div className="row g-3">
-          {books.map((book) => (
-            <div className="col-6 col-md-3 col-lg-2" key={book.id}>
+          {filteredBooks.map((book) => (
+            <div className="col-6 col-sm-4 col-md-3 col-lg-2" key={book.id}>
               <div className="card h-100 shadow-sm">
                 {book.coverImageUrl ? (
                   <img
@@ -80,14 +124,14 @@ export default function BookList() {
                   />
                 ) : (
                   <div
-                    className="card-img-top bg-light d-flex align-items-center justify-content-center text-muted"
+                    className="card-img-top bg-light d-flex align-items-center justify-content-center text-muted small"
                     style={{ aspectRatio: "2 / 3" }}
                   >
                     표지 없음
                   </div>
                 )}
-                <div className="card-body">
-                  <h2 className="h6 card-title">
+                <div className="card-body p-2">
+                  <h2 className="h6 card-title mb-1">
                     <Link
                       to={`/books/${book.id}`}
                       className="text-decoration-none stretched-link"
@@ -98,7 +142,7 @@ export default function BookList() {
                   <p className="card-text small mb-0">{book.author}</p>
                 </div>
                 {book.createdAt && (
-                  <div className="card-footer small text-muted">
+                  <div className="card-footer small text-muted py-1">
                     {new Date(book.createdAt).toLocaleDateString("ko-KR")}
                   </div>
                 )}
