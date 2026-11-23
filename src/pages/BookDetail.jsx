@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { API_URL } from "../api/books";
+import CoverGenerator from "../components/CoverGenerator";
 
 export default function BookDetail() {
   const { id } = useParams(); // id 읽기
@@ -91,6 +92,11 @@ export default function BookDetail() {
 
   function handleEdit() {}
 
+  // AI 표지 생성이 끝나면 화면의 book 상태에 즉시 반영
+  function handleCoverGenerated(url) {
+    setBook((prev) => ({ ...prev, coverImageUrl: url }));
+  }
+
   return (
     <div>
       <section>
@@ -117,22 +123,63 @@ export default function BookDetail() {
               </button>
             </div>
 
-            <p>등록일자: {formatDate(book.createdAt)}</p>
+            <hr />
 
-            {book.updatedAt && book.createdAt !== book.updatedAt && (
-              <p>수정일자: {formatDate(book.updatedAt)}</p>
-            )}
+            {/* AI 표지 생성 (E 담당 컴포넌트) */}
+            <CoverGenerator book={book} onGenerated={handleCoverGenerated} />
 
-            {book.coverImageUrl && (
-              <img
-                src={book.coverImageUrl}
-                alt={`${book.title} 표지`}
-                width={180}
-              />
-            )}
+            <div
+              style={{
+                display: "flex",
+                gap: "24px",
+                alignItems: "flex-start",
+                marginTop: "24px",
+              }}
+            >
+              {book.coverImageUrl ? (
+                <img
+                  src={book.coverImageUrl}
+                  alt={`${book.title} 표지`}
+                  style={{
+                    width: 200,
+                    borderRadius: 8,
+                    boxShadow: "0 2px 8px rgba(0,0,0,0.25)",
+                  }}
+                />
+              ) : (
+                <div
+                  style={{
+                    width: 200,
+                    height: 300,
+                    borderRadius: 8,
+                    background: "#eee",
+                    color: "#888",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                  }}
+                >
+                  표지 없음
+                </div>
+              )}
 
-            <h3>줄거리</h3>
-            <p>{book.content || "등록된 도서 소개가 없어요."}</p>
+              <div style={{ flex: 1, textAlign: "center" }}>
+                <h3>책 내용</h3>
+                <p>{book.content || "등록된 도서 소개가 없어요."}</p>
+
+                <hr />
+
+                <p>등록일자: {formatDate(book.createdAt)}</p>
+
+                {book.updatedAt && book.createdAt !== book.updatedAt && (
+                  <p>수정일자: {formatDate(book.updatedAt)}</p>
+                )}
+              </div>
+            </div>
+
+            <div style={{ textAlign: "center", marginTop: "32px" }}>
+              <Link to="/">도서 목록으로 돌아가기</Link>
+            </div>
 
             <dialog
               ref={deleteDialog}
