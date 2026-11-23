@@ -38,38 +38,74 @@ export default function BookList() {
     return () => controller.abort();
   }, []);
 
-  if (loading) return <p>도서 목록을 불러오는 중입니다.</p>;
-  if (error) return <p role="alert">{error}</p>;
+  if (loading) {
+    return (
+      <div className="text-center py-5">
+        <div className="spinner-border" role="status">
+          <span className="visually-hidden">도서 목록을 불러오는 중입니다.</span>
+        </div>
+      </div>
+    );
+  }
+  if (error) {
+    return (
+      <div className="alert alert-danger" role="alert">
+        {error}
+      </div>
+    );
+  }
 
   return (
     <section>
-      <h1>도서 목록</h1>
+      <div className="d-flex justify-content-between align-items-center mb-4">
+        <h1 className="h3 mb-4">📚 도서 목록</h1>
+        <Link to="/books/new" className="btn btn-primary">
+          📝 도서 등록
+        </Link>
+      </div>
 
       {books.length === 0 ? (
-        <p>등록된 도서가 없습니다.</p>
+        <p className="text-muted">등록된 도서가 없습니다.</p>
       ) : (
-        <ul>
+        <div className="row g-4">
           {books.map((book) => (
-            <li key={book.id}>
-              {book.coverImageUrl && (
-                <img
-                  src={book.coverImageUrl}
-                  alt={`${book.title} 표지`}
-                  width={80}
-                />
-              )}
-              <h2>
-                <Link to={`/books/${book.id}`}>{book.title}</Link>
-              </h2>
-              <p>저자 {book.author}</p>
-              {book.createdAt && (
-                <p>
-                  등록일 {new Date(book.createdAt).toLocaleDateString("ko-KR")}
-                </p>
-              )}
-            </li>
+            <div className="col-6 col-md-4 col-lg-3" key={book.id}>
+              <div className="card h-100 shadow-sm">
+                {book.coverImageUrl ? (
+                  <img
+                    src={book.coverImageUrl}
+                    alt={`${book.title} 표지`}
+                    className="card-img-top"
+                    style={{ aspectRatio: "2 / 3", objectFit: "cover" }}
+                  />
+                ) : (
+                  <div
+                    className="card-img-top bg-light d-flex align-items-center justify-content-center text-muted"
+                    style={{ aspectRatio: "2 / 3" }}
+                  >
+                    표지 없음
+                  </div>
+                )}
+                <div className="card-body">
+                  <h2 className="h6 card-title">
+                    <Link
+                      to={`/books/${book.id}`}
+                      className="text-decoration-none stretched-link"
+                    >
+                      {book.title}
+                    </Link>
+                  </h2>
+                  <p className="card-text small mb-0">{book.author}</p>
+                </div>
+                {book.createdAt && (
+                  <div className="card-footer small text-muted">
+                    {new Date(book.createdAt).toLocaleDateString("ko-KR")}
+                  </div>
+                )}
+              </div>
+            </div>
           ))}
-        </ul>
+        </div>
       )}
     </section>
   );

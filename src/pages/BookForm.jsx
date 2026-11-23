@@ -120,29 +120,72 @@ export default function BookForm() {
     }
   };
 
-  if (loadError) return <p role="alert">{loadError}</p>;
-  if (isEdit && !originalBook) return <p role="status">도서 정보를 불러오는 중입니다.</p>;
+  if (loadError) return <p className="alert alert-danger" role="alert">{loadError}</p>;
+  if (isEdit && !originalBook) return <p className="text-body-secondary" role="status">도서 정보를 불러오는 중입니다.</p>;
 
   return (
-    <>
-      <h2>{isEdit ? "도서 수정" : "신규 도서 등록"}</h2>
-      <form onSubmit={handleSaveBook}>
-        <input type="text" name="title" placeholder='title' aria-label="제목"
-          value={form.title}
-          onChange={handleChange}
-        />
-        <input type="text" name="author" placeholder='author' aria-label="저자"
-          value={form.author}
-          onChange={handleChange}
-        />
-        <input type="text" name="content" placeholder='content' aria-label="내용"
-          value={form.content}
-          onChange={handleChange}
-        />
-        <button type="submit" disabled={saving}>
-          {isEdit ? "도서 수정" : "신규 도서 등록"}
-        </button>
-      </form>
-    </>
+    <div className="col-md-8 col-lg-6 mx-auto">
+      <div className="card shadow-sm border-0">
+        <div className="card-body p-4">
+          <h1 className="h3 mb-4">{isEdit ? "도서 수정" : "신규 도서 등록"}</h1>
+          <p className="mb-4">{isEdit ? "수정할 도서 정보를 입력하세요" : "시스템에 등록하실 도서의 정보를 입력하세요"}</p>
+          <hr />
+          <form onSubmit={handleSaveBook}>
+            <div className="mb-3">
+              <label htmlFor="book-title" className="form-label">제목</label>
+              <input
+                id="book-title"
+                name="title"
+                type="text"
+                className="form-control"
+                placeholder="도서 제목을 입력하세요"
+                value={form.title}
+                onChange={handleChange}
+              />
+            </div>
+            <div className="mb-3">
+              <label htmlFor="book-author" className="form-label">저자</label>
+              <input
+                id="book-author"
+                name="author"
+                type="text"
+                className="form-control"
+                placeholder="저자를 입력하세요"
+                value={form.author}
+                onChange={handleChange}
+              />
+            </div>
+            <div className="mb-4">
+              <label htmlFor="book-content" className="form-label">내용</label>
+              <textarea
+                id="book-content"
+                name="content"
+                className="form-control"
+                rows={8}
+                placeholder="도서 소개를 입력하세요"
+                value={form.content}
+                onChange={handleChange}
+              />
+            </div>
+            <div className="d-flex gap-2 justify-content-end">
+              <button
+                type="button"
+                className="btn btn-outline-secondary"
+                onClick={() => navigate('/')}
+              >
+                ❌ 취소
+              </button>
+              <button
+                type="submit"
+                className="btn btn-primary"
+                disabled={saving}
+              >
+                {isEdit ? "✏️ 수정" : "📝 등록"}
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
   );
 }

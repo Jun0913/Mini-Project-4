@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { API_URL } from "../api/books";
-import "./CoverGenerator.css";
 
 const OPENAI_URL = "https://api.openai.com/v1/images/generations";
 
@@ -94,51 +93,72 @@ export default function CoverGenerator({ book, onGenerated }) {
   };
 
   return (
-    <section className="cg">
-      <h3 className="cg-title">AI 표지 생성</h3>
+    <section className="card shadow-sm border-0 my-4">
+      <div className="card-body">
+        <h2 className="h5 card-title mb-3">AI 표지 생성</h2>
 
-      <div className="cg-field">
-        <label htmlFor="cg-key">OpenAI API Key:</label>
-        <input
-          id="cg-key"
-          type="password"
-          placeholder="sk-..."
-          value={apiKey}
-          onChange={(e) => setApiKey(e.target.value)}
-          autoComplete="off"
-        />
+        <div className="mb-3">
+          <label htmlFor="cg-key" className="form-label">OpenAI API Key</label>
+          <input
+            id="cg-key"
+            type="password"
+            className="form-control"
+            placeholder="sk-..."
+            value={apiKey}
+            onChange={(e) => setApiKey(e.target.value)}
+            autoComplete="off"
+          />
+        </div>
+
+        <div className="row g-3 mb-3">
+          <div className="col-sm-8">
+            <label htmlFor="cg-model" className="form-label">생성 모델</label>
+            <select
+              id="cg-model"
+              className="form-select"
+              value={modelValue}
+              onChange={(e) => setModelValue(e.target.value)}
+            >
+              {MODEL_OPTIONS.map((o) => (
+                <option key={o.value} value={o.value}>{o.label}</option>
+              ))}
+            </select>
+          </div>
+          <div className="col-sm-4">
+            <label htmlFor="cg-quality" className="form-label">품질</label>
+            <select
+              id="cg-quality"
+              className="form-select"
+              value={quality}
+              onChange={(e) => setQuality(e.target.value)}
+            >
+              {QUALITY_OPTIONS.map((q) => (
+                <option key={q} value={q}>{q}</option>
+              ))}
+            </select>
+          </div>
+        </div>
+
+        <p className="form-text">※ 표지를 생성할 때마다 OpenAI API 사용 비용이 발생합니다.</p>
+
+        <button
+          type="button"
+          className="btn btn-primary"
+          onClick={handleGenerateCover}
+          disabled={loading || !apiKey.trim()}
+        >
+          {loading ? (
+            <>
+              <span className="spinner-border spinner-border-sm me-2" aria-hidden="true" />
+              생성 중...
+            </>
+          ) : (
+            "✨ 생성하기"
+          )}
+        </button>
+
+        {error && <div className="alert alert-danger mt-3 mb-0" role="alert">{error}</div>}
       </div>
-
-      <div className="cg-field">
-        <label htmlFor="cg-model">생성 모델:</label>
-        <select id="cg-model" value={modelValue} onChange={(e) => setModelValue(e.target.value)}>
-          {MODEL_OPTIONS.map((o) => (
-            <option key={o.value} value={o.value}>{o.label}</option>
-          ))}
-        </select>
-      </div>
-
-      <div className="cg-field">
-        <label htmlFor="cg-quality">품질:</label>
-        <select id="cg-quality" value={quality} onChange={(e) => setQuality(e.target.value)}>
-          {QUALITY_OPTIONS.map((q) => (
-            <option key={q} value={q}>{q}</option>
-          ))}
-        </select>
-      </div>
-
-      <p className="cg-notice">※ 표지를 생성할 때마다 OpenAI API 사용 비용이 발생합니다.</p>
-
-      <button
-        type="button"
-        className="cg-button"
-        onClick={handleGenerateCover}
-        disabled={loading || !apiKey.trim()}
-      >
-        {loading ? "생성 중..." : "AI 표지 생성"}
-      </button>
-
-      {error && <p className="cg-error" role="alert">{error}</p>}
     </section>
   );
 }
